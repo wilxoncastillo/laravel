@@ -32,11 +32,14 @@ class UserController extends Controller
      */
     public function create()
     {
+        /* pasando por el AppServiceProvider
         $professions = \App\Profession::orderBy('title', 'asc')->get();
         $skills = \App\Skill::orderBy('name', 'asc')->get();
         $roles = trans('users.roles');
+        return  view('users.edit', compact('user','professions','skills', 'roles'));
+        */
         $user = new User();
-        return  view('users.create', compact('professions','skills', 'roles', 'user'));
+        return  view('users.create', compact('user'));
     }
 
     /**
@@ -71,10 +74,14 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        /* pasando por el AppServiceProvider
         $professions = \App\Profession::orderBy('title', 'asc')->get();
         $skills = \App\Skill::orderBy('name', 'asc')->get();
         $roles = trans('users.roles');
         return  view('users.edit', compact('user','professions','skills', 'roles'));
+        */
+
+        return  view('users.edit', compact('user'));
     }
 
     /**
@@ -113,19 +120,9 @@ class UserController extends Controller
             unset($data['password']);
         }
 
-        //dd($user);
-
         $user->update($data);
-        //$user->profile($data);
-
-        $user->profile()->create([
-                'bio' => $data['bio'],
-                'twitter' => $data['twitter'],
-                'profession_id' => $data['profession_id'],
-            ]);
-            
+        $user->profile->update($data);
         $user->skills()->attach($data['skills'] ?? []);
-
         return redirect()->route('users.show', ['user' => $user]);
     }
 
