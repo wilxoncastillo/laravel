@@ -1,0 +1,134 @@
+https://laracasts.com/discuss/channels/laravel/migration-for-stored-procedure// github.com/sileence
+
+https://stackoverflow.com/questions/33731109/creating-migrations-for-stored-procedures-functions-and-events-from-existing-da/33731460
+
+//pruebas unitarias
+php artisan make:test WelcomeTest  
+
+vendor/bin/phpunit --filter WelcomeTest
+vendor/bin/phpunit --stop-on-failure
+
+
+composer dump-autoload // cada vez que se modifique seeder migration
+
+php artisan migrate:refresh --seed
+
+php artisan make:fact UserProfileFactory --model=UserProfile
+
+﻿composer global require laravel/installer
+Composer créate-project laravel/laravel nombreProyecto 5.7
+composer create-project --prefer-dist laravel/laravel blog "5.5.*"
+composer update
+Laravel new nombreProyecto
+
+ artisan make:request CreateUserRequest
+
+Controladores
+Php artisan make:controller NombreControlador
+Php artisan make:controller NombreControlador –r
+Php artisan make:controller NombreControlador –resource
+php artisan make:model Product --migration --factory
+php artisan make:seeder UsersTableSeeder
+php artisan migrate --seed
+php artisan db:seed
+php artisan migrate:fresh --seed
+php artisan make:migration create_users_table --create=users
+php artisan make:migration add_votes_to_users_table --table=users
+php artisan make:auth
+php artisan make:controller TareasController --resource
+php artisan make:controller nombre-controlador --plain
+php artisan make:controller ShowProfile --invokable
+php artisan make:seeder UsersTableSeeder
+php artisan make:model Todo -mcr
+if you run php artisan make:model --help you can see all the available options
+
+-m, --migration Create a new migration file for the model.
+-c, --controller Create a new controller for the model.
+-r, --resource Indicates if the generated controller should be a resource controller
+
+Update
+
+As mentioned in the comments by @arun in newer versions of laravel > 5.6 it is possible to run following command:
+
+php artisan make:model Todo -a
+
+
+Para crear nuestras migraciones en Laravel se usa el siguiente comando:
+php artisan make:migration nombre_migracion
+que nos crea el archivo limpio para escribir nuestra migración, o bien el comando:
+php artisan make:migration nombre_migracion --create=nombre_tabla
+que nos agrega una plantilla de trabajo básica para empezar a trabajar.
+Como ejemplo del curso se tomará este comando:
+php artisan make:migration crear_tabla_pasteles --create=pasteles
+el cual nos dará este resultado:
+Created Migration: 2015_06_23_054801_crear_tabla_pasteles
+
+
+Para crear nuestras migraciones en Laravel se usa el siguiente comando:
+php artisan make:migration nombre_migracion
+
+que nos crea el archivo limpio para escribir nuestra migración, o bien el comando:
+php artisan make:migration nombre_migracion --create=nombre_tabla
+
+
+Modelos y Migraciones
+php artisan migrate
+Php artisan make:model Directorio/NombreModelo –m
+Php artisan make:migration create_nombre_modelos_table
+dentro del modelo se debe especificar el nombre de la base de datos:
+protected $table = 'nombre_tabla'
+
+Manejo de las vistas de errores
+
+Para hacer el manejo de las páginas de los errores, como por ejemplo 404, se pueden personalizar. En la carpeta resources>views se crea una carpeta llamada errors y se crean todos los archivos de errores que queramos manejar, en este caso se puede crear uno para el 404, se llamara 404.blade.php, y se diseña como queramosAutenticación
+
+Laravel ya cuenta con unas secciones de manejo de la autenticación de los usuarios, solo se debe escribir en la línea de comandos:
+
+Php artisan make:auth
+
+Crea el login y el registro de usuarios, y así para los demás errores.
+
+Autenticación
+
+Laravel ya cuenta con unas secciones de manejo de la autenticación de los usuarios, solo se debe escribir en la línea de comandos:
+
+Php artisan make:auth
+
+Crea el login y el registro de usuarios
+
+---
+¿Cómo puedo cambiar el motor de base de datos en Laravel?
+
+Hay varias formas de hacerlo, podemos cambiar el motor de base de datos desde el archivo config/database.php modificando la clave engine de la siguiente forma.
+<?php
+'mysql' => [
+    'driver' => 'mysql',
+    'host' => env('DB_HOST', '127.0.0.1'),
+    'port' => env('DB_PORT', '3306'),
+    'database' => env('DB_DATABASE', 'forge'),
+    'username' => env('DB_USERNAME', 'forge'),
+    'password' => env('DB_PASSWORD', ''),
+    'unix_socket' => env('DB_SOCKET', ''),
+    'charset' => 'utf8mb4',
+    'collation' => 'utf8mb4_unicode_ci',
+    'prefix' => '',
+    'strict' => true,
+    'engine' => "MyISAM",
+],
+view raw
+database.php hosted with ❤ by GitHub
+
+Si ahora ejecutamos las migraciones, todas ellas se crearán utilizando el motor de bases de datos MyISAM.
+¿Y si quiero definir el motor de base de datos para una tabla en concreto?
+
+Fácil, para poder especificar el motor de base de datos a nivel de tabla, simplemente debemos establecerlo es su respectiva migración de la siguiente forma.
+<?php
+Schema::create('mytable', function (Blueprint $table) {
+    $table->engine = "MyISAM"; // así lo establecemos a nivel de tabla
+    $table->increments('id');
+    $table->timestamps();
+});
+view raw
+schema.php hosted with ❤ by GitHub
+
+Ahora ya sabemos cómo podemos cambiar el motor de base de datos de Laravel a nivel global o a nivel de tabla.

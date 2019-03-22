@@ -1,0 +1,63 @@
+https://laracasts.com/discuss/channels/laravel/migration-for-stored-procedure
+
+Rule::existes('professions', 'id')->whereNull('deleted_at')
+
+Notas
+
+Cuando recibimos el error Call to undefined method Illumuinate\Database\Query\Builder::all() esto se debe a que cada vez que modificamos las consultas debemos llamar al método get() en lugar de all():
+App\Profession::orderBy('title', 'ASC')->all() // Mal
+App\Profession::orderBy('title', 'ASC')->get() // Bien
+
+En nuestro caso, cuando utilizamos orderBy Laravel va a utilizar métodos mágicos para construir la consulta y al hacer esto ya no tenemos el método all() disponible.
+
+App\Profession::orderBy('title', 'asc')->get()
+
+Para definir una relación de muchos a muchos en base de datos vamos a necesitar y a utilizar una tabla pivote. La tabla pivote va a contener 2 campos con las llaves foráneas de las tablas relacionadas, en el ejemplo del video: user_id y skill_id:
+
+Para definir una relación de muchos a muchos en base de datos vamos a necesitar y a utilizar una tabla pivote. La tabla pivote va a contener 2 campos con las llaves foráneas de las tablas relacionadas, en el ejemplo del video: user_id y skill_id:
+
+public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'user_skill');
+    }
+
+Para guardar datos en una relación muchos a muchos con Eloquent, necesitas interactuar con el método de la relación y llamar a los métodos attach, attachNew o sync, por ejemplo:
+
+PHP
+<?php
+//...
+$user->skills()->attach([1, 2]);
+
+<?php
+//...
+$user->skills()->attach([1, 2]);
+
+El método attach también acepta un modelo o una colección de modelos como argumentos
+
+Corrección de errores
+Si recibimos el error:
+
+BadMethodCallException: Call to undefined method Illuminate\Database\Query\Builder::skills()
+1
+BadMethodCallException: Call to undefined method Illuminate\Database\Query\Builder::skills()
+Se nos está informando de que estamos tratando de llamar a un método no definido. En nuestro caso se trata del método skills().
+
+Una vez agregado el método de la relación podemos recibir otro error:
+
+Symfony\Component\Debug\Exception\FatalThrowableError: Call to a member function attach() on null
+
+Esto sucede cuando la relación que tratamos de utilizar, en nuestro caso skills() en User.php, no está retornando nada. Para solucionar esto simplemente agregamos el código de la relación dentro del método:
+
+PHP
+public function skills()
+{
+    return $this->belongsToMany(Skill::class);
+}
+1
+2
+3
+4
+public function skills()
+{
+    return $this->belongsToMany(Skill::class);
+}
