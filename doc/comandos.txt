@@ -8,6 +8,9 @@ php artisan make:test WelcomeTest
 vendor/bin/phpunit --filter WelcomeTest
 vendor/bin/phpunit --stop-on-failure
 
+/*
+Si estás creando una nueva directiva y quieres probar el resultado, asegúrate de eliminar el caché de las vistas con php artisan view:clear.
+*/
 
 composer dump-autoload // cada vez que se modifique seeder migration
 

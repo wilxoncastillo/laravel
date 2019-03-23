@@ -122,7 +122,7 @@ class UserController extends Controller
 
         $user->update($data);
         $user->profile->update($data);
-        $user->skills()->attach($data['skills'] ?? []);
+        $user->skills()->sync($data['skills'] ?? []);
         return redirect()->route('users.show', ['user' => $user]);
     }
 
