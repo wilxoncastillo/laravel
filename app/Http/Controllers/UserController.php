@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 
 // add
 use App\{
-    Http\Requests\CreateUserRequest, Profession, Skill, User, UserProfile
+    Http\Requests\CreateUserRequest, Http\Requests\UpdateUserRequest, Profession, Skill, User, UserProfile
 };
 
 use App\Role;
@@ -91,8 +91,10 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(User $user)
+    //public function update(User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
+        /*
         $data = request()->validate([
             'name' => 'required',
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
@@ -123,6 +125,12 @@ class UserController extends Controller
         $user->update($data);
         $user->profile->update($data);
         $user->skills()->sync($data['skills'] ?? []);
+        */
+        
+        //$data = $request->validated();
+
+        $request->updateUser($user);
+        
         return redirect()->route('users.show', ['user' => $user]);
     }
 

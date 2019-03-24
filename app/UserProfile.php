@@ -10,4 +10,6 @@ class UserProfile extends Model
         'user_id', 'profession_id','bio', 'twitter',
     ];
 
+    
+
 }

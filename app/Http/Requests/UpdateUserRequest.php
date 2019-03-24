@@ -4,13 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
 //add
 use App\User;
 use App\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
-class CreateUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,8 +32,8 @@ class CreateUserRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => 'required',
+            'email' => ['required', 'email', Rule::unique('users')->ignore($this->user)],
+            'password' => '',
             'bio' => 'required',
             'role' => ['nullable', Rule::in(Role::getList())],
             'twitter' => ['nullable', 'present', 'url'],
@@ -45,6 +46,8 @@ class CreateUserRequest extends FormRequest
                 Rule::exists('skills', 'id'),
             ],
         ];
+
+        
     }
 
     public function messages()
@@ -56,27 +59,18 @@ class CreateUserRequest extends FormRequest
         ];
     }
 
+     public function updateUser(User $user)
+     {
+        $data = $this->validated();
 
-    public function createUser()
-    {
-        DB::transaction(function () {
-            $data = $this->validated();
-            
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'role' => $data['role'] ?? 'user',
-            ]);
+        if ($data['password'] != null) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
 
-
-            $user->profile()->create([
-                'bio' => $data['bio'],
-                'twitter' => $data['twitter'],
-                'profession_id' => $data['profession_id'],
-            ]);
-
-            $user->skills()->attach($data['skills'] ?? []);
-        });
-    }
+        $user->update($data);
+        $user->profile->update($data);
+        $user->skills()->sync($data['skills'] ?? []);
+     }
 }
