@@ -2,22 +2,15 @@
 
 namespace Tests\Feature\Admin;
 
-use App\User;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class DeleteUsersTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
-    function it_deletes_a_user()
+    public function it_sends_a_user_to_the_trash()
     {
-        $user = factory(User::class)->create();
-
-        $this->delete("users/{$user->id}")
-            ->assertRedirect('users');
-
-        $this->assertDatabaseEmpty('users');
+        $useer
     }
 }

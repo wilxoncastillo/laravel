@@ -59,3 +59,17 @@ public function skills()
     return $this->belongsToMany(Skill::class);
 }
 
+
+Métodos disponibles al incluir el trait SoftDeletes
+
+Una vez incluido este trait dispondrás de diversos métodos:
+
+    $modelo->trashed() indica si el registro ha sido eliminado de manera lógica.
+    $modelo->restore() restaura un modelo previamente eliminado de forma lógica.
+    $modelo->forceDelete() elimina un registro para siempre :'(
+
+Además cuando uses SoftDeletes Eloquent va a excluir dichos registros de las consultas a la base de datos, puedes incluirlos de nuevo con:
+
+    Model::onlyTrashed()->get() incluye solamente resultados que hayan sido eliminados de forma lógica
+    Model::withTrashed()->get() incluye todos los resultados, eliminados de manera lógica o no.
+

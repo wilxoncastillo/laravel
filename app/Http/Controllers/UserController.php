@@ -21,8 +21,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('users.index', compact('users'));
+        //$users = User::all();
+        $users = User::orderByDesc('created_at')->paginate();
+        $title = 'Listado de usuarios';
+        return view('users.index', compact('title', 'users'));
     }
 
     /**
@@ -94,44 +96,36 @@ class UserController extends Controller
     //public function update(User $user)
     public function update(UpdateUserRequest $request, User $user)
     {
-        /*
-        $data = request()->validate([
-            'name' => 'required',
-            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            'password' => '',
-            'bio' => 'required',
-            'role' => ['nullable', Rule::in(Role::getList())],
-            'twitter' => ['nullable', 'present', 'url'],
-            'profession_id' => [
-                'nullable', 'present',
-                Rule::exists('professions', 'id')->whereNull('deleted_at')
-            ],
-            'skills' => [
-                'array',
-                Rule::exists('skills', 'id'),
-            ],
-        ], [
-            'name.required' => 'El campo nombre es requerido',
-            'email.email' => 'Por favor ingresa una dirección valida',
-            'email.unique' => 'Ya existe un usuario con ese email',
-        ]);
-
-        if ($data['password'] != null) {
-            $data['password'] = bcrypt($data['password']);
-        } else {
-            unset($data['password']);
-        }
-
-        $user->update($data);
-        $user->profile->update($data);
-        $user->skills()->sync($data['skills'] ?? []);
-        */
-        
-        //$data = $request->validated();
-
         $request->updateUser($user);
-        
         return redirect()->route('users.show', ['user' => $user]);
+    }
+
+    
+    public function trash(User $user)
+    {
+        $user->delete();
+        $user->profile()->delete();
+        //$user->skills()->delete();
+        return redirect()->route('users.index');
+    }
+
+
+    public function restore($id)
+    {
+        $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
+        $user->restore();
+        $user->profile()->restore();
+        return redirect()->route('users.trashed');
+    }
+
+    public function trashed() 
+    {
+        $users = User::onlyTrashed()
+            ->orderBy('deleted_at', 'desc')
+            ->paginate();
+        
+        $title = 'Listado de usuarios en papelera';
+        return view('users.trashed', compact('title', 'users'));
     }
 
     /**
@@ -140,9 +134,10 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        $user->delete();
-        return redirect()->route('users.index');
+        $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
+        $user->forceDelete();
+        return redirect()->route('users.trashed');
     }
 }

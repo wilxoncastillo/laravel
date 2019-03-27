@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 //add
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password'
     ];
+
+    protected $perPage = 10;
+    use SoftDeletes;
 
     /**
      * The attributes that should be hidden for arrays.
@@ -43,15 +47,11 @@ class User extends Authenticatable
     // un usuario tiene o pernecene a una profesion
     public function profession() // profession + id  = profession_id
     {
-        // se obtiene un  modelo
         return $this->belongsTo(Profession::class)->withDefault();
-        
-        //return $this->belongsTo(Profession::class, 'id_profession');
     }
 
      public function profile() // profession + id  = profession_id
     {
-        // valor por defecto withDefaullt()
         return $this->hasOne(UserProfile::class)->withDefault(); 
     }
 

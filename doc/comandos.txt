@@ -27,6 +27,8 @@ Laravel new nombreProyecto
  artisan make:request CreateUserRequest
 
 Controladores
+php artisan vendor:publish paginacion
+
 Php artisan make:controller NombreControlador
 Php artisan make:controller NombreControlador –r
 Php artisan make:controller NombreControlador –resource

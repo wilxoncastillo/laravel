@@ -23,7 +23,6 @@ class CreateUserProfilesTable extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
 
             $table->foreign('profession_id')
@@ -31,6 +30,7 @@ class CreateUserProfilesTable extends Migration
                 ->on('professions');
             
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
