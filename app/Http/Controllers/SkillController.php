@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-// add
-use App\Profession;
+//add
+use App\Skill;
 
-class ProfessionController extends Controller
+class SkillController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,13 +16,8 @@ class ProfessionController extends Controller
      */
     public function index()
     {
-        $profession = Profession::query()
-            ->withCount('profiles')
-            ->orderBy('title')
-            ->get();
-
-        return view('professions.index', [
-            'professions' => $profession,
+        return view('skills.index', [
+            'skills' => Skill::orderBy('name')->get(),
         ]);
     }
 
@@ -50,10 +45,10 @@ class ProfessionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Profession  $profession
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Professions $profession)
+    public function show($id)
     {
         //
     }
@@ -61,10 +56,10 @@ class ProfessionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Profession  $profession
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Professions $profession)
+    public function edit($id)
     {
         //
     }
@@ -73,10 +68,10 @@ class ProfessionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Profession  $profession
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Professions $profession)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -84,16 +79,11 @@ class ProfessionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Profession  $profession
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Profession $profession)
+    public function destroy($id)
     {
-        
-        abort_if($profession->profiles()->exists(), 400, 'Cannot delete a profession linked to a profile.');
-
-        $profession->delete();
-
-        return redirect('professions');
+        //
     }
 }

@@ -28,7 +28,7 @@
             <th scope="row">{{ $user->id }}</th>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
-            <td>{{ $user->profession->title }}</td>
+            <td>{{ $user->profile->profession->title }}</td>
             <td>
                 <form action="{{ route('users.destroy', $user) }}" method="POST">
                     {{ csrf_field() }}

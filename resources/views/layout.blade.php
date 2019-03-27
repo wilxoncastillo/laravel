@@ -30,6 +30,12 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ url('/users') }}">Usuarios</a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url('/professions') }}">Profesiones</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url('/skills') }}">Habilidades</a>
+                </li>
             </ul>
         </div>
     </nav>

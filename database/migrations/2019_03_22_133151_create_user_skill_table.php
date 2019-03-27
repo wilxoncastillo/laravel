@@ -18,7 +18,6 @@ class CreateUserSkillTable extends Migration
 
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
      
             $table->unsignedInteger('skill_id');

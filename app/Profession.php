@@ -14,10 +14,8 @@ class Profession extends Model
 
     protected $fillable = ['title'];
 
-    // una profession tiene muchos usuarios
-    public function users()
+    public function profiles()
     {
-        //Illuminate\Database\Eloquent\Collection
-        return $this->hasMany(User::class);
+        return $this->hasMany(UserProfile::class);
     }
 }

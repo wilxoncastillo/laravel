@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role'
+        'name', 'email', 'password'
     ];
 
     /**
@@ -53,8 +53,6 @@ class User extends Authenticatable
     {
         // valor por defecto withDefaullt()
         return $this->hasOne(UserProfile::class)->withDefault(); 
-
-
     }
 
     public function skills()

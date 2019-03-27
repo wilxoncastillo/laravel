@@ -53,11 +53,9 @@ public function skills()
 {
     return $this->belongsToMany(Skill::class);
 }
-1
-2
-3
-4
+
 public function skills()
 {
     return $this->belongsToMany(Skill::class);
 }
+

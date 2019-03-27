@@ -11,5 +11,8 @@ class UserProfile extends Model
     ];
 
     
-
+    public function profession() // profession + id  = profession_id
+    {
+        return $this->belongsTo(Profession::class)->withDefault();
+    }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Professions;
 use Illuminate\Http\Request;
 
-class ProfessionsController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +40,10 @@ class ProfessionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Professions  $professions
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Professions $professions)
+    public function show($id)
     {
         //
     }
@@ -52,10 +51,10 @@ class ProfessionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Professions  $professions
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Professions $professions)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +63,10 @@ class ProfessionsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Professions  $professions
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Professions $professions)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +74,10 @@ class ProfessionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Professions  $professions
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Professions $professions)
+    public function destroy($id)
     {
         //
     }
