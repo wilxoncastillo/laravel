@@ -36,6 +36,9 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ url('/skills') }}">Habilidades</a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url('users/papelera') }}">Papelera</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -44,11 +47,8 @@
 <!-- Begin page content -->
 <main role="main" class="container">
     <div class="row mt-3">
-        <div class="col-8">
+        <div class="col-12">
             @yield('content')
-        </div>
-        <div class="col-4">
-            <p>Aside</p>
         </div>
     </div>
 </main>

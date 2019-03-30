@@ -31,7 +31,10 @@ class UserSeeder extends Seeder
         $professions = profession::all();
         $skills = skill::all();
         
-        factory(User::class,30)->create()->each(function ($user) use ($professions){
+        factory(User::class,30)->create()->each(function ($user) use ($professions , $skills){
+            $randomSkills = $skills->random(rand(0,7));
+            $user->skills()->attach($randomSkills);
+            
             $user->profile()->create(
                 factory(\App\UserProfile::class)->raw([
                     'profession_id' => rand(0,2) ? $professions->random()->id : null,

@@ -69,6 +69,7 @@ class UpdateUserRequest extends FormRequest
             unset($data['password']);
         }
 
+
         $user->update($data);
         $user->profile->update($data);
         $user->skills()->sync($data['skills'] ?? []);

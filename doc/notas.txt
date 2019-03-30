@@ -4,6 +4,8 @@ Rule::existes('professions', 'id')->whereNull('deleted_at')
 
 Notas
 
+helpers optional()
+
 Cuando recibimos el error Call to undefined method Illumuinate\Database\Query\Builder::all() esto se debe a que cada vez que modificamos las consultas debemos llamar al método get() en lugar de all():
 App\Profession::orderBy('title', 'ASC')->all() // Mal
 App\Profession::orderBy('title', 'ASC')->get() // Bien

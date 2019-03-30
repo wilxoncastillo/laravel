@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password'
+        'name', 'email', 'password', 'role'
     ];
 
     protected $perPage = 10;
@@ -45,10 +45,12 @@ class User extends Authenticatable
     }
 
     // un usuario tiene o pernecene a una profesion
+    /*
     public function profession() // profession + id  = profession_id
     {
         return $this->belongsTo(Profession::class)->withDefault();
     }
+    */
 
      public function profile() // profession + id  = profession_id
     {

@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->truncateTable([
             'users',
             'user_profiles',
+            'user_skill',
             'skills',
             'professions',
         ]);
