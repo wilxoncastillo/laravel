@@ -44,17 +44,18 @@ class User extends Authenticatable
         return static::where(compact('email'))->first();
     }
 
-    // un usuario tiene o pernecene a una profesion
-    /*
-    public function profession() // profession + id  = profession_id
+    public function team() // profession + id  = profession_id
     {
-        return $this->belongsTo(Profession::class)->withDefault();
+        return $this->belongsTo(Team::class)->withDefault([
+            'name' => '(Sin equipo)'
+        ]);
     }
-    */
 
      public function profile() // profession + id  = profession_id
     {
-        return $this->hasOne(UserProfile::class)->withDefault(); 
+        return $this->hasOne(UserProfile::class)->withDefault([
+            'title' => '(Sin Profession)'
+        ]); 
     }
 
     public function skills()

@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 //Route::resource('users','UserController');
 
+/*
 Route::get('/users', 'UserController@index')
     ->name('users.index');
 
@@ -31,6 +32,7 @@ Route::post('/users', 'UserController@store');
 Route::get('/users/{user}/editar', 'UserController@edit')->name('users.edit');
 
 Route::put('/users/{user}', 'UserController@update');
+*/
 
 Route::patch('/users/{user}/papelera', 'UserController@trash')->name('users.trash');
 
@@ -40,6 +42,7 @@ Route::get('/users/papelera', 'UserController@trashed')->name('users.trashed');
 
 Route::delete('/users/{id}', 'UserController@destroy')->name('users.destroy');
 
+Route::resource('users','UserController');
 //----
 
 Route::resource('professions','ProfessionController'); 

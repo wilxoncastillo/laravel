@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 // add
-use App\{
-    Http\Requests\CreateUserRequest, Http\Requests\UpdateUserRequest, Profession, Skill, User, UserProfile
-};
+use App\{Profession, Skill, User, UserProfile};
+use App\Http\Requests\{CreateUserRequest, Http\Requests\UpdateUserRequest};
 
 use App\Role;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +21,28 @@ class UserController extends Controller
     public function index()
     {
         //$users = User::all();
-        $users = User::orderByDesc('created_at')->paginate();
+        //$users = User::orderByDesc('created_at')->paginate();
+        
+        $users = User::query()
+            ->when(request('team'), function ($query, $team) {
+                if($team === 'with_team') {
+                    $query->has('team');
+                } elseif($team === 'without_team') {
+                    $query->doesntHave('team');
+                }
+            })
+            ->when(request('search'), function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhereHas('team', function ($query) use ($search){
+                           $query->where('name', 'like', "%$search%"); 
+                        });
+                });
+            })
+            ->orderByDesc('created_at')
+            ->paginate();
+
         $title = 'Listado de usuarios';
         return view('users.index', compact('title', 'users'));
     }
@@ -113,6 +133,7 @@ class UserController extends Controller
         
         $title = 'Listado de usuarios en papelera';
         return view('users.trashed', compact('title', 'users'));
+        //return view('users.index', compact('title', 'users'));
     }
 
     /**

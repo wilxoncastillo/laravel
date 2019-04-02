@@ -1,3 +1,5 @@
+composer dump-autoload // cada vez que se modifique seeder migration
+
 https://laracasts.com/discuss/channels/laravel/migration-for-stored-procedure// github.com/sileence
 
 https://stackoverflow.com/questions/33731109/creating-migrations-for-stored-procedures-functions-and-events-from-existing-da/33731460
