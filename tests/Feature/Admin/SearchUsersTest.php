@@ -86,13 +86,13 @@ class SearchUsersTest extends TestCase
             'team_id' => factory(Team::class)->create(['name' => 'Firefly'])->id,
         ]);
 
-        $this->get('/users?search=firefly')
-            ->assertStatus(200)
-            ->assertViewHas('users', function ($users) use ($roxana, $vanessa, $dulce) {
-                return $users->contains($dulce) 
-                && !$users->contains($roxana)
-                && !$users->contains($vanessa);
-            });
+        $response = $this->get('/users?search=Fire')
+            ->assertStatus(200);
+
+        $response->assertViewCollection('users')
+            ->contains($dulce)
+            ->notContains($roxana)
+            ->notContains($vanessa);
     }
 
 

@@ -4,9 +4,12 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
+//add
+use Illuminate\Foundation\Testing\TestResponse;
+
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, TestHelpers;
+    use CreatesApplication, TestHelpers, DetectRepeatedQueries;
 
     //add
     protected $defaultData = [];
@@ -15,7 +18,6 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        /*
         TestResponse::macro('viewData', function ($key) {
             $this->ensureResponseHasView();
             $this->assertViewHas($key);
@@ -25,8 +27,15 @@ abstract class TestCase extends BaseTestCase
         TestResponse::macro('assertViewCollection', function ($var) {
             return new TestCollectionData($this->viewData($var));
         });
-        */
 
         $this->withoutExceptionHandling();
+
+        $this->enableQueryLog();
+    }
+
+    public function tearDown()
+    {
+        $this->flushQueryLog();
+        parent::tearDown();
     }
 }

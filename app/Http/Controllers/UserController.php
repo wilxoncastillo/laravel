@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 
 // add
 use App\{Profession, Skill, User, UserProfile};
-use App\Http\Requests\{CreateUserRequest, Http\Requests\UpdateUserRequest};
+use App\Http\Requests\{CreateUserRequest, UpdateUserRequest};
 
 use App\Role;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +20,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //$users = User::all();
-        //$users = User::orderByDesc('created_at')->paginate();
-        
         $users = User::query()
+            ->with('team', 'profile', 'skills')
             ->when(request('team'), function ($query, $team) {
                 if($team === 'with_team') {
                     $query->has('team');
@@ -43,6 +41,15 @@ class UserController extends Controller
             ->orderByDesc('created_at')
             ->paginate();
 
+        $users->appends(request(['search']));
+
+        /*
+        $users = User::query()
+            ->search(request('search'))
+            ->orderByDesc('created_at')
+            ->paginate();
+        */
+            
         $title = 'Listado de usuarios';
         return view('users.index', compact('title', 'users'));
     }

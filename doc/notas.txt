@@ -1,3 +1,9 @@
+Instalación de Laravel Debugbar
+composer require barryvdh/laravel-debugbar --dev
+
+Instalación de Laravel N+1 Query Detector
+composer require beyondcode/laravel-query-detector --dev
+
 https://laracasts.com/discuss/channels/laravel/migration-for-stored-procedure
 
 Rule::existes('professions', 'id')->whereNull('deleted_at')

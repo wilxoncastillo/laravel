@@ -34,16 +34,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function isAdmin()
-    {
-        return $this->is_admin === 'admin';
-    }
 
     public static function findByEmail($email)
     {
         return static::where(compact('email'))->first();
     }
-
+    
     public function team() // profession + id  = profession_id
     {
         return $this->belongsTo(Team::class)->withDefault([
@@ -51,34 +47,52 @@ class User extends Authenticatable
         ]);
     }
 
-     public function profile() // profession + id  = profession_id
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'user_skill');
+    }
+
+    public function profile() // profession + id  = profession_id
     {
         return $this->hasOne(UserProfile::class)->withDefault([
             'title' => '(Sin Profession)'
         ]); 
     }
-
-    public function skills()
-    {
-        return $this->belongsToMany(Skill::class, 'user_skill');
-    }
     
-    public static function createUser($data)
+    public function isAdmin()
     {
-        DB::transaction(function() use ($data)  {
-            $user =User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'role' => '',
-            ]);
-
-            $user->profile()->create([
-                'profession_id' => $data['profession_id'],
-                'bio' => $data['bio'],
-                'twitter' => $data['twitter'],
-            ]);
-        });
+        return $this->is_admin === 'admin';
     }
 
+    public function scopeSearch($query, $search)
+    {
+        if (empty ($search)) {
+            return;
+        }
+
+        /*
+            ->when(request('team'), function ($query, $search) {
+                if($team === 'with_team') {
+                    $query->has('team');
+                } elseif($team === 'without_team') {
+                    $query->doesntHave('team');
+                }
+            })
+            ->when(request('search'), function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhereHas('team', function ($query) use ($search){
+                           $query->where('name', 'like', "%$search%"); 
+                        });
+                });
+            })
+        */ 
+
+        $query->where('name', 'like', "%{$search}%")
+            ->orWhere('email', 'like', "%{$search}%")
+            ->orWhereHas('team', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            });   
+    }
 }

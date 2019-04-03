@@ -12,6 +12,8 @@
 
     @include('users._filters')
 
+    <p>Viendo página {{ $users->currentPage()}} de {{ $users->lastPage()}}</p>
+
     @if ($users->isNotEmpty())
         <div class="table-responsive-lg">
             <table class="table table-sm">
@@ -30,6 +32,8 @@
                 </tbody>
             </table>
 
+            {{-- $users->appends(['search' => request('search')])->links() --}}
+            {{-- $users->appends(request(['search']))->links() --}}
             {{ $users->links() }}
         </div>
     @else
