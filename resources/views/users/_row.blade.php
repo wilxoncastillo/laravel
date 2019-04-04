@@ -1,7 +1,7 @@
 <tr>
     <td rowspan="2">{{ $user->id }}</td>
     <th scope="row">
-        {{ $user->name }}
+        {{ $user->name }} {{ $user->status }} <span class="status st-active"></span> <span class="status st-inactive"></span>
         <span class="note">{{ $user->team->name }}</span>
     </th>
     <td>{{ $user->email }}</td>

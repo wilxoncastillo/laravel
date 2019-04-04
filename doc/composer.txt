@@ -1,0 +1,8 @@
+composer require laravel/scout
+
+php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
+
+composer require algolia/algoliasearch-client-php
+
+php artisan scout:import "App\User"
+php artisan scout:flush "App\User"

@@ -14,6 +14,8 @@ vendor/bin/phpunit --stop-on-failure
 Si estás creando una nueva directiva y quieres probar el resultado, asegúrate de eliminar el caché de las vistas con php artisan view:clear.
 */
 
+php artisan vendor:publish
+
 composer dump-autoload // cada vez que se modifique seeder migration
 
 php artisan migrate:refresh --seed

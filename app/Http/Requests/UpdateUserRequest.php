@@ -31,7 +31,8 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => ['required', 'email', Rule::unique('users')->ignore($this->user)],
             'password' => '',
             'bio' => 'required',
@@ -53,7 +54,8 @@ class UpdateUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'El campo nombre es obligatorio',
+            'first_name.required' => 'El campo nombre es obligatorio',
+            'last_name.required' => 'El campo nombre es obligatorio',
             'email.email' => 'Por favor ingresa una dirección valida',
             'email.unique' => 'Ya existe un usuario con ese Email',
         ];

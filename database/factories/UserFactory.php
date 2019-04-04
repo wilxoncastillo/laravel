@@ -15,10 +15,17 @@ use Faker\Generator as Faker;
 
 $factory->define(App\User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'password' => '$2y$10$NunsMkH.IB87k4D/PDaaQO8czLulbhLK6NZych7eWPMFe4R0Ypvo2', // laravel
         'role' => 'user',
         'remember_token' => str_random(10),
     ];
 });
+
+/*
+$factory->afterCreating(App\User::class, function ($user, $faker) {
+    $user->profile()->save(factory(App\UserProfile::class)->make());
+});
+*/

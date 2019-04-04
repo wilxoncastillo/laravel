@@ -20,8 +20,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        /*
         $users = User::query()
-            ->with('team', 'profile', 'skills')
+            ->with('team', 'profile.profession', 'skills')
             ->when(request('team'), function ($query, $team) {
                 if($team === 'with_team') {
                     $query->has('team');
@@ -31,7 +32,7 @@ class UserController extends Controller
             })
             ->when(request('search'), function ($query, $search) {
                 $query->where(function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%")
+                    $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
                         ->orWhereHas('team', function ($query) use ($search){
                            $query->where('name', 'like', "%$search%"); 
@@ -40,18 +41,32 @@ class UserController extends Controller
             })
             ->orderByDesc('created_at')
             ->paginate();
+        */    
 
-        $users->appends(request(['search']));
+        if (request('search')) {
+            $q = User::search(request('search'));
+        } else {
+            $q = User::query();
+        }
+
+        $users = $q->paginate()
+               ->appends(request(['search']));
+
+        $users->load('team', 'profile.profession', 'skills');
 
         /*
-        $users = User::query()
-            ->search(request('search'))
-            ->orderByDesc('created_at')
-            ->paginate();
-        */
-            
         $title = 'Listado de usuarios';
         return view('users.index', compact('title', 'users'));
+        */
+
+        return view('users.index', [
+            'users' => $users,
+            'title' => 'Listado de usuarios',
+            'roles' => trans('users.filters.roles'),
+            'skills' => Skill::orderBy('name')->get(),
+            'states' => trans('users.filters.states'),
+            'checkedSkills' => collect(request('skills')),
+        ]);
     }
 
     /**

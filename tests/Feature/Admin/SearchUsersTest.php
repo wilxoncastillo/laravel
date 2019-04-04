@@ -16,11 +16,11 @@ class SearchUsersTest extends TestCase
     public function search_users_by_name()
     {
         factory(User::class)->create([
-        	'name' => 'Joel'
+        	'first_name' => 'Joel'
         ]);
 
         factory(User::class)->create([
-        	'name' => 'Ellie'
+        	'first_name' => 'Ellie'
         ]);
 
         $this->get('/users?search=Joel')
@@ -35,11 +35,11 @@ class SearchUsersTest extends TestCase
     public function show_results_with_a_partial_search_by_name()
     {
         $joel =factory(User::class)->create([
-        	'name' => 'joel'
+        	'first_name' => 'joel'
         ]);
 
         $ellie = factory(User::class)->create([
-        	'name' => 'Ellie'
+        	'first_name' => 'Ellie'
         ]);
 
         $this->get('/users?search=joe')
@@ -72,17 +72,17 @@ class SearchUsersTest extends TestCase
     public function search_users_by_team_name()
     {
         $roxana =factory(User::class)->create([
-            'name' => 'roxana',
+            'first_name' => 'roxana',
             'team_id' => factory(Team::class)->create(['name' => 'Smuggler'])->id,
         ]);
 
         $vanessa = factory(User::class)->create([
-            'name' => 'venessa',
+            'first_name' => 'venessa',
             'team_id' => null,
         ]);
 
         $dulce = factory(User::class)->create([
-            'name' => 'dulce',
+            'first_name' => 'dulce',
             'team_id' => factory(Team::class)->create(['name' => 'Firefly'])->id,
         ]);
 

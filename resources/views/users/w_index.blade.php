@@ -10,7 +10,7 @@
         </p>
     </div>
 
-    @includeWhen(isset($states), 'users._filters')
+    @include(isset($states),'users._filters')
 
     <p>Viendo página {{ $users->currentPage()}} de {{ $users->lastPage()}}</p>
 

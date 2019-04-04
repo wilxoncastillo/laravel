@@ -81,3 +81,81 @@ Además cuando uses SoftDeletes Eloquent va a excluir dichos registros de las co
     Model::onlyTrashed()->get() incluye solamente resultados que hayan sido eliminados de forma lógica
     Model::withTrashed()->get() incluye todos los resultados, eliminados de manera lógica o no.
 
+Eloquent: Definir propiedades dinámicas o Acessors en Laravel
+
+Con Laravel tenemos la posibilidad de tratar con atributos que no representan una columna de la tabla asociada al modelo, para usar una propiedad dinámica creamos un método cuyo nombre debe seguir una convención  getNombreAttributte. Por ejemplo:
+#
+public function getNameAttribute()
+{
+    return "{$this->first_name} {$this->last_name}";
+}
+    
+#
+public function getNameAttribute()
+{
+    return "{$this->first_name} {$this->last_name}";
+}
+
+------------
+Query Builder: Expresiones sin formato
+
+Escribir consultas complicadas con Laravel no es un problema gracias a su poderoso Query Builder, si deseamos agregar algunas expresiones de SQL como CONCAT podemos hacerlo de varias formas. Vamos a comenzar observando cómo podemos lograrlo utilizando el Facade DB y el método raw:
+#
+use Illuminate\Support\Facades\DB;
+
+$query->where(DB::raw('CONCAT(first_name, " ", last_name)', 'like', "%{$search}%"))
+    ->get();
+1
+2
+3
+4
+5
+    
+#
+use Illuminate\Support\Facades\DB;
+ 
+$query->where(DB::raw('CONCAT(first_name, " ", last_name)', 'like', "%{$search}%"))
+    ->get();
+
+Laravel nos proporciona algunos métodos para simplificar las expresiones sin tener que utilizar el Facade DB, entre ellos tenemos whereRaw:
+#
+use Illuminate\Support\Facades\DB;
+
+$query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$search}%"))
+    ->get();
+    
+#
+use Illuminate\Support\Facades\DB;
+ 
+$query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$search}%"))
+    ->get();
+
+El método recibe como primer argumento toda la consulta a excepción del parámetro o parámetros dinámicos los cuales deben ser pasados como “bindings” a través del segundo parámetro.
+
+El primer parámetro de los métodos para escribir expresiones es código SQL por lo tanto no va a ser escapado por Laravel ni por PDO. En caso de tener un valor dinámico debes pasarlo como segundo argumento para trabajar con bindings y colocar solo el placeholder (?) en la parte de la consulta SQL. En caso de no hacerlo estarías exponiendo tu aplicación a posibles ataques de inyección de SQL.
+
+----
+Laravel Scout y Algolia fueron cubiertos de manera extensa en nuestro Curso de novedades en Laravel 5.3, te recomendamos ver las lecciones y/o leer las notas de dichas lecciones si deseas ampliar el conocimiento aprendido en este video:
+
+    Introducción a Algolia
+    Configuración y uso de una base de datos ya existente (Sakila) en un proyecto de Laravel 5.3
+    Instalación y configuración de Laravel Scout con Algolia en Laravel 5.3
+    Indexar datos en Algolia con Laravel Scout en Laravel 5.3
+    Búsquedas de texto con Algolia y Laravel Scout en Laravel 5.3
+
+----------
+Model Factories con Callbacks
+
+Algunas veces necesitamos generar registros con un poco más de complejidad, para ello los model factories de Laravel nos presentan ciertas opciones o callbacks que podemos utilizar. Por ejemplo, para agregar un perfil de usuario luego de la creación del usuario escribimos lo siguiente:
+<?php
+
+$factory->afterCreating(App\User::class, function ($user, $faker) {
+    $user->profile()->save(factory(App\UserProfile::class)->make());
+});
+
+    
+<?php
+ 
+$factory->afterCreating(App\User::class, function ($user, $faker) {
+    $user->profile()->save(factory(App\UserProfile::class)->make());
+});

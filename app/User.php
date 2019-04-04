@@ -2,16 +2,19 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-
-//add
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+
+// add 
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes, Searchable;
+    
+    //protected $perPage = 10;
 
     /**
      * The attributes that are mass assignable.
@@ -19,11 +22,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role'
+        'first_name', 'last_name','email', 'password', 'role'
     ];
 
-    protected $perPage = 10;
-    use SoftDeletes;
 
     /**
      * The attributes that should be hidden for arrays.
@@ -58,13 +59,29 @@ class User extends Authenticatable
             'title' => '(Sin Profession)'
         ]); 
     }
+
+    public function profession() // profession + id  = profession_id
+    {
+        return $this->belongsTo(Profession::class)->withDefault([
+            'title' => '(Sin profesión)'
+        ]);
+    }
     
     public function isAdmin()
     {
         return $this->is_admin === 'admin';
     }
 
-    public function scopeSearch($query, $search)
+    public function toSearchableArray()
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'team' => $this->team,
+        ];
+    }
+
+    public function scopezzzSearch($query, $search)
     {
         if (empty ($search)) {
             return;
@@ -94,5 +111,10 @@ class User extends Authenticatable
             ->orWhereHas('team', function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             });   
+    }
+
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 }
