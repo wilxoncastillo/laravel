@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserSkill extends Model
 {
-    use SoftDele
+    use SoftDele;
 }

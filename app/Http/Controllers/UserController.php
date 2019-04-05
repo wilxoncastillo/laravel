@@ -20,44 +20,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        /*
         $users = User::query()
-            ->with('team', 'profile.profession', 'skills')
-            ->when(request('team'), function ($query, $team) {
-                if($team === 'with_team') {
-                    $query->has('team');
-                } elseif($team === 'without_team') {
-                    $query->doesntHave('team');
-                }
-            })
-            ->when(request('search'), function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhereHas('team', function ($query) use ($search){
-                           $query->where('name', 'like', "%$search%"); 
-                        });
-                });
-            })
-            ->orderByDesc('created_at')
-            ->paginate();
-        */    
+        ->byState(request('state'))
+        ->byRole(request('role'))
+        ->search(request('search'))
+        ->orderByDesc('created_at')
+        ->paginate();
 
-        if (request('search')) {
-            $q = User::search(request('search'));
-        } else {
-            $q = User::query();
-        }
-
-        $users = $q->paginate()
-               ->appends(request(['search']));
+        $users->appends(request(['search']));
 
         $users->load('team', 'profile.profession', 'skills');
 
-        /*
-        $title = 'Listado de usuarios';
-        return view('users.index', compact('title', 'users'));
-        */
 
         return view('users.index', [
             'users' => $users,
@@ -129,7 +102,7 @@ class UserController extends Controller
         return redirect()->route('users.show', ['user' => $user]);
     }
 
-    
+
     public function trash(User $user)
     {
         $user->delete();
@@ -147,12 +120,12 @@ class UserController extends Controller
         return redirect()->route('users.trashed');
     }
 
-    public function trashed() 
+    public function trashed()
     {
         $users = User::onlyTrashed()
             ->orderBy('deleted_at', 'desc')
             ->paginate();
-        
+
         $title = 'Listado de usuarios en papelera';
         return view('users.trashed', compact('title', 'users'));
         //return view('users.index', compact('title', 'users'));

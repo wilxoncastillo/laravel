@@ -46,9 +46,12 @@ class UpdateUserRequest extends FormRequest
                 'array',
                 Rule::exists('skills', 'id'),
             ],
+            'state' => [
+                ['required',Rule::in(['active', 'inactive'])],
+            ]
         ];
 
-        
+
     }
 
     public function messages()
@@ -71,7 +74,7 @@ class UpdateUserRequest extends FormRequest
             unset($data['password']);
         }
 
-
+        $user->state  = $this->state;
         $user->update($data);
         $user->profile->update($data);
         $user->skills()->sync($data['skills'] ?? []);

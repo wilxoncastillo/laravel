@@ -7,13 +7,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 
-// add 
+// add
 use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes, Searchable;
-    
+    //use Notifiable, SoftDeletes, Searchable;
+    use Notifiable, SoftDeletes;
+
     //protected $perPage = 10;
 
     /**
@@ -22,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name','email', 'password', 'role'
+        'first_name', 'last_name','email', 'password', 'role', 'active'
     ];
 
 
@@ -35,12 +36,15 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $casts = [
+        'active' => 'bool',
+    ];
 
     public static function findByEmail($email)
     {
         return static::where(compact('email'))->first();
     }
-    
+
     public function team() // profession + id  = profession_id
     {
         return $this->belongsTo(Team::class)->withDefault([
@@ -57,7 +61,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserProfile::class)->withDefault([
             'title' => '(Sin Profession)'
-        ]); 
+        ]);
     }
 
     public function profession() // profession + id  = profession_id
@@ -66,7 +70,7 @@ class User extends Authenticatable
             'title' => '(Sin profesión)'
         ]);
     }
-    
+
     public function isAdmin()
     {
         return $this->is_admin === 'admin';
@@ -81,40 +85,55 @@ class User extends Authenticatable
         ];
     }
 
-    public function scopezzzSearch($query, $search)
+    public function scopeSearch($query, $search)
     {
         if (empty ($search)) {
             return;
         }
 
-        /*
-            ->when(request('team'), function ($query, $search) {
-                if($team === 'with_team') {
-                    $query->has('team');
-                } elseif($team === 'without_team') {
-                    $query->doesntHave('team');
-                }
-            })
-            ->when(request('search'), function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhereHas('team', function ($query) use ($search){
-                           $query->where('name', 'like', "%$search%"); 
-                        });
-                });
-            })
-        */ 
-
-        $query->where('name', 'like', "%{$search}%")
+        $query
+            ->where('first_name', 'like', "%{$search}%")
+            ->where('last_name', 'like', "%{$search}%")
             ->orWhere('email', 'like', "%{$search}%")
             ->orWhereHas('team', function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
-            });   
+            });
+    }
+
+    public function scopeByState($query, $state)
+    {
+        if ($state == 'active') {
+            return $query->where('active', true);
+        }
+
+        if ($state == 'inactive') {
+            return $query->where('active', false);
+        }
+    }
+
+    public function scopeByRole($query, $role)
+    {
+        if (in_array($role, ['admin','user']))
+        {
+            $query->where('role', $role);
+        }
     }
 
     public function getNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+
+    public function setStateAttribute($value)
+    {
+        $this->attributes['active'] = $value == 'active';
+    }
+
+    public function getStateAttribute()
+    {
+        if ($this->active !== null) {
+            return $this->active ? 'active' : 'inactive';
+        }
     }
 }

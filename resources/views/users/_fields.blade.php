@@ -71,3 +71,16 @@
         <label class="form-check-label" for="role_{{ $role}}">{{ $name }}</label>
     </div>
 @endforeach
+
+<h6 class="mt-3">Estado</h6>
+@foreach(trans('users.states') as $state => $label)
+    <div class="form-check form-check-inline">
+        <input class="form-check-input"
+               type="radio"
+               name="state"
+               id="state_{{ $state }}"
+               value="{{ $state }}"
+                {{ old('state', $user->state) == $state ? 'checked' : '' }}>
+        <label class="form-check-label" for="state_{{ $state }}">{{ $label }}</label>
+    </div>
+@endforeach

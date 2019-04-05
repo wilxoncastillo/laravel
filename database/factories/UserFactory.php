@@ -20,6 +20,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => '$2y$10$NunsMkH.IB87k4D/PDaaQO8czLulbhLK6NZych7eWPMFe4R0Ypvo2', // laravel
         'role' => 'user',
+        'active' => '1',
         'remember_token' => str_random(10),
     ];
 });
@@ -29,3 +30,5 @@ $factory->afterCreating(App\User::class, function ($user, $faker) {
     $user->profile()->save(factory(App\UserProfile::class)->make());
 });
 */
+
+
